@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WardOS Boot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4a07db;
+      --bg-dark: #121212;
+      --bg-light: #ab1111;
+      --text-dark: #110303;
+      --text-light: #2c2c2c;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0; overflow: hidden;
+      background: var(--bg-dark); color: var(--text-light);
+      transition: background 1s, color 1s;
+    }
+    /* Loader */
+    #loader {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      background: linear-gradient(135deg,#000,#121212);
+      animation: fadeOut 1s ease 4s forwards;
+    }
+    .logo {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(45deg,var(--primary),#fff);
+      display: flex; justify-content: center; align-items: center;
+      animation: pulse 2s infinite;
+    }
+    .logo svg {
+      width: 28px; height: 28px;
+      animation: spin 3s linear infinite;
+      fill: var(--bg-dark);
+    }
+    .bar {
+      width: 80%; max-width: 400px; height: 6px;
+      margin: 1.5rem 0;
+      background: #000000; border-radius: 3px; overflow: hidden;
+    }
+    .bar div {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg,#3a3a3a,var(--primary),#fff);
+      animation: load 4s forwards;
+    }
+    .quote { color: var(--text-dark); font-size: 1.1rem; }
+    /* Animations */
+    @keyframes spin { to{transform:rotate(360deg);} }
+    @keyframes pulse {
+      0%{box-shadow:0 0 0 0 rgba(157, 34, 34, 0.4);}
+      70%{box-shadow:0 0 0 20px rgba(255,255,255,0);}
+      100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}
+    }
+    @keyframes load { to{width:100%;} }
+    @keyframes fadeOut { to{opacity:0;visibility:hidden;} }
+    /* Main content */
+    main {
+      opacity: 0; text-align: center;
+      padding: 2rem; min-height: 100vh;
+      transition: opacity 1s;
+    }
+    body.loaded { background: var(--bg-light); color: var(--text-light); }
+    body.loaded main { opacity: 1; }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M12 17.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0-5.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0-5.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-2a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg>
+    </div>
+    <div class="bar"><div></div></div>
+    <div class="quote">Towards a perfect system...</div>
+  </div>
+
+
+  <main>
+    <h1>Welcome to WardOS</h1>
+    <p>The loader has completed its boot sequence.</p>
+  </main>
+
+
+  
+  <script>
+    setTimeout(()=>document.body.classList.add('loaded'),4500);
+  </script>
+</body>
+</html>
