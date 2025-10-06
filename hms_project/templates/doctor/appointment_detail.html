@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Appointment Detail{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Appointment #{{ appointment.id }}</h1>
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div><strong>Date</strong>: {{ appointment.date }} at {{ appointment.time }}</div>
+        <div><strong>Patient</strong>: {{ appointment.patient.name }}</div>
+        <div><strong>Status</strong>: {{ appointment.status }}</div>
+      </div>
+      <div class="col-md-6">
+        {% if appointment.status == 'Booked' %}
+          <form method="post" action="{{ url_for('doctor.appointment_complete', appointment_id=appointment.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="mb-2">{{ form.diagnosis.label(class_='form-label') }} {{ form.diagnosis(class_='form-control', rows=2, required=true) }}</div>
+            <div class="mb-2">{{ form.prescription.label(class_='form-label') }} {{ form.prescription(class_='form-control', rows=2, required=true) }}</div>
+            <div class="mb-2">{{ form.notes.label(class_='form-label') }} {{ form.notes(class_='form-control', rows=2) }}</div>
+            {{ form.submit(class_='btn btn-success') }}
+          </form>
+        {% else %}
+          <div><strong>Diagnosis</strong>: {{ appointment.diagnosis or '-' }}</div>
+          <div><strong>Prescription</strong>: {{ appointment.prescription or '-' }}</div>
+          <div><strong>Notes</strong>: {{ appointment.notes or '-' }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

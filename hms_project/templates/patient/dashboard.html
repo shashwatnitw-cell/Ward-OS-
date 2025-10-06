@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Patient Dashboard</h1>
+
+<h2 class="h6">Browse by Specialization</h2>
+<div class="mb-3">
+  <form method="get" action="{{ url_for('patient.doctors_search') }}" class="row g-2">
+    <div class="col-md-6"><input type="text" name="specialization" class="form-control" placeholder="e.g., Cardiology"></div>
+    <div class="col-md-2"><button class="btn btn-outline-secondary w-100">Search</button></div>
+  </form>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h6">Upcoming Appointments</h3>
+        <ul class="list-group list-group-flush">
+          {% for a in upcoming %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ a.date }} {{ a.time }} — {{ a.doctor.name }}</span>
+              <form method="post" action="{{ url_for('patient.cancel', appointment_id=a.id) }}" class="d-inline">
+                <button class="btn btn-sm btn-outline-danger">Cancel</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="list-group-item">No upcoming appointments.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h6">Past Visits</h3>
+        <ul class="list-group list-group-flush">
+          {% for a in history %}
+            <li class="list-group-item">
+              {{ a.date }} {{ a.time }} — {{ a.doctor.name }} — {{ a.status }}
+            </li>
+          {% else %}
+            <li class="list-group-item">No history yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

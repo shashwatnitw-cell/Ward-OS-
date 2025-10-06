@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Doctor Dashboard</h1>
+
+{% if form is defined %}
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h6">Add Availability</h2>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="row g-2">
+        <div class="col-md-4">{{ form.date.label(class_='form-label') }} {{ form.date(class_='form-control', required=true) }}</div>
+        <div class="col-md-4">{{ form.time.label(class_='form-label') }} {{ form.time(class_='form-control', required=true, placeholder='09:00') }}</div>
+        <div class="col-md-4 align-self-end">{{ form.submit(class_='btn btn-primary') }}</div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if todays is defined %}
+<h2 class="h6">Today's Appointments</h2>
+<ul class="list-group mb-4">
+  {% for a in todays %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>{{ a.time }} — {{ a.patient.name }}</span>
+      <a href="{{ url_for('doctor.appointment_detail', appointment_id=a.id) }}" class="btn btn-sm btn-outline-primary">Open</a>
+    </li>
+  {% else %}
+    <li class="list-group-item">No appointments today.</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if availability is defined %}
+<h2 class="h6">Upcoming Availability (7 days)</h2>
+<ul class="list-group">
+  {% for s in availability %}
+    <li class="list-group-item">{{ s.date }} — {{ s.time }} {% if s.is_booked %}<span class="badge text-bg-secondary">Booked</span>{% endif %}</li>
+  {% else %}
+    <li class="list-group-item">No slots yet.</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

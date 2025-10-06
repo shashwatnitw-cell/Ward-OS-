@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-4">Admin Dashboard</h1>
+
+{% if total_doctors is defined %}
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="h2">{{ total_doctors }}</div>
+        <div class="text-muted">Doctors</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="h2">{{ total_patients }}</div>
+        <div class="text-muted">Patients</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="h2">{{ total_appointments }}</div>
+        <div class="text-muted">Appointments</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="h2">{{ upcoming }}</div>
+        <div class="text-muted">Upcoming</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if patients is defined %}
+  <h2 class="h5 mt-4">Patients</h2>
+  <ul class="list-group">
+    {% for p in patients %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ p.name }} — {{ p.email }}</span>
+        <a href="{{ url_for('admin.patient_detail', id=p.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+      </li>
+    {% else %}
+      <li class="list-group-item">No patients found.</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% if appointments is defined %}
+  <h2 class="h5 mt-4">Appointments</h2>
+  <div class="table-responsive">
+    <table class="table table-sm">
+      <thead><tr><th>ID</th><th>Date</th><th>Time</th><th>Doctor</th><th>Patient</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in appointments %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.doctor.name }}</td>
+            <td>{{ a.patient.name }}</td>
+            <td>{{ a.status }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">No appointments.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}
