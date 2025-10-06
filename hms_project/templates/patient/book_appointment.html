@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Book Appointment - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Book with {{ doctor.name }}</h1>
+<form method="post" novalidate>
+  {{ form.hidden_tag() }}
+  {{ form.doctor_id }}
+  <div class="mb-3">
+    {{ form.slot_id.label(class_='form-label') }}
+    {{ form.slot_id(class_='form-select', required=True) }}
+    {% for e in form.slot_id.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+  </div>
+  {{ form.submit(class_='btn btn-primary') }}
+  <a class="btn btn-outline-secondary" href="{{ url_for('patient.search_doctors') }}">Back</a>
+</form>
+{% endblock %}

@@ -1,0 +1,7 @@
+:root{--brand:#4f46e5;--muted:#6b7280}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;}
+.navbar-brand{color:var(--brand)}
+.card-stat{border-left:4px solid var(--brand)}
+.btn-primary{background-color:var(--brand);border-color:var(--brand)}
+.btn-outline-primary{color:var(--brand);border-color:var(--brand)}
+.btn-outline-primary:hover{background-color:var(--brand);border-color:var(--brand);color:#fff}
