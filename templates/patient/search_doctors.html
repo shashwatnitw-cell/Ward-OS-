@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Find Doctors - Patient - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Find a Doctor</h1>
+    
+    <!-- Search Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('patient.search_doctors') }}">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="specialization" class="form-label">Specialization</label>
+                        <select class="form-select" id="specialization" name="specialization">
+                            <option value="">All Specializations</option>
+                            {% for spec in specializations %}
+                            <option value="{{ spec }}" {% if selected_specialization == spec %}selected{% endif %}>{{ spec }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="search" class="form-label">Search by Name</label>
+                        <input type="text" class="form-control" id="search" name="search" placeholder="Doctor name..." value="{{ search }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Doctors List -->
+    <div class="row">
+        {% if doctors %}
+        {% for doctor in doctors %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ doctor.name }}</h5>
+                </div>
+                <div class="card-body">
+                    {% if doctor.doctor_profile %}
+                    <p><strong>Specialization:</strong> <span class="badge bg-info">{{ doctor.doctor_profile.specialization }}</span></p>
+                    <p><strong>Contact:</strong> {{ doctor.contact }}</p>
+                    {% if doctor.doctor_profile.bio %}
+                    <p class="text-muted"><small>{{ doctor.doctor_profile.bio }}</small></p>
+                    {% endif %}
+                    
+                    <div class="mt-3">
+                        <strong>Availability:</strong>
+                        {% set available_count = doctor_availability.get(doctor.id, 0) %}
+                        {% if available_count > 0 %}
+                        <span class="badge bg-success">{{ available_count }} slots available</span>
+                        {% else %}
+                        <span class="badge bg-secondary">No available slots</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    {% if doctor_availability.get(doctor.id, 0) > 0 %}
+                    <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" class="btn btn-primary w-100">Book Appointment</a>
+                    {% else %}
+                    <button class="btn btn-secondary w-100" disabled>No Slots Available</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <p class="mb-0">No doctors found matching your search criteria. Try a different search.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

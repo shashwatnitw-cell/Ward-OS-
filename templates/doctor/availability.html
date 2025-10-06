@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Availability - Doctor - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Manage Your Availability</h1>
+    
+    <!-- Add Availability Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Add New Time Slot</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="date" class="form-label">Date *</label>
+                        <input type="date" class="form-control" id="date" name="date" required min="{{ today }}" max="{{ next_week }}">
+                        <small class="form-text text-muted">Within the next 7 days</small>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="time" class="form-label">Time * (24-hour format)</label>
+                        <input type="time" class="form-control" id="time" name="time" required>
+                        <small class="form-text text-muted">Format: HH:MM (e.g., 14:00 for 2:00 PM)</small>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">Add Slot</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Current Availability -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Your Availability (Next 7 Days)</h5>
+        </div>
+        <div class="card-body">
+            {% if availability_by_date %}
+            {% for date_key, slots in availability_by_date.items()|sort %}
+            <div class="mb-4">
+                <h6 class="text-primary">{{ slots[0].date|format_date }}</h6>
+                <div class="row">
+                    {% for slot in slots|sort(attribute='time') %}
+                    <div class="col-md-3 mb-2">
+                        <div class="card {% if slot.is_booked %}bg-secondary text-white{% else %}border-primary{% endif %}">
+                            <div class="card-body py-2">
+                                <small>
+                                    {{ slot.time|format_time }}
+                                    {% if slot.is_booked %}
+                                    <span class="badge bg-danger">Booked</span>
+                                    {% else %}
+                                    <span class="badge bg-success">Available</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted">No availability slots set for the next 7 days. Add slots using the form above.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{% if edit %}Edit{% else %}Add{% endif %} Doctor - Admin - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">{% if edit %}Edit Doctor{% else %}Add New Doctor{% endif %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ form.name.data or '' }}" required minlength="2" maxlength="100">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ form.email.data or '' }}" required {% if edit %}readonly{% endif %}>
+                            {% if edit %}
+                            <small class="form-text text-muted">Email cannot be changed</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Contact Number *</label>
+                            <input type="tel" class="form-control" id="contact" name="contact" value="{{ form.contact.data or '' }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="specialization" class="form-label">Specialization *</label>
+                            <input type="text" class="form-control" id="specialization" name="specialization" value="{{ form.specialization.data or '' }}" required minlength="2" maxlength="100">
+                            <small class="form-text text-muted">e.g., Cardiology, Neurology, Pediatrics</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Biography</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="4">{{ form.bio.data or '' }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password {% if not edit %}*{% endif %}</label>
+                            <input type="password" class="form-control" id="password" name="password" {% if not edit %}required{% endif %} minlength="6">
+                            {% if edit %}
+                            <small class="form-text text-muted">Leave blank to keep current password</small>
+                            {% else %}
+                            <small class="form-text text-muted">Default: doctor123 (if not provided)</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.doctors_list') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">{% if edit %}Update Doctor{% else %}Add Doctor{% endif %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

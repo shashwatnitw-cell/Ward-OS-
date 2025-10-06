@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Dashboard - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Welcome, {{ current_user.name }}</h1>
+    
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Quick Actions</h5>
+        </div>
+        <div class="card-body">
+            <a href="{{ url_for('patient.search_doctors') }}" class="btn btn-primary me-2">Find a Doctor</a>
+            <a href="{{ url_for('patient.search_doctors') }}" class="btn btn-outline-primary">Book Appointment</a>
+        </div>
+    </div>
+    
+    <!-- Available Specializations -->
+    {% if specializations %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Available Specializations</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for specialization in specializations %}
+                <div class="col-md-4 mb-2">
+                    <a href="{{ url_for('patient.search_doctors', specialization=specialization) }}" class="btn btn-outline-info w-100">
+                        {{ specialization }}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Upcoming Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">Upcoming Appointments</h5>
+        </div>
+        <div class="card-body">
+            {% if upcoming_appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Doctor</th>
+                            <th>Specialization</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in upcoming_appointments %}
+                        <tr>
+                            <td>{{ appointment.date|format_date }}</td>
+                            <td>{{ appointment.time|format_time }}</td>
+                            <td>{{ appointment.doctor.name }}</td>
+                            <td>
+                                {% if appointment.doctor.doctor_profile %}
+                                {{ appointment.doctor.doctor_profile.specialization }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="{{ url_for('patient.reschedule_appointment', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-warning">Reschedule</a>
+                                <form method="POST" action="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No upcoming appointments. <a href="{{ url_for('patient.search_doctors') }}">Book an appointment</a></p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Past Appointments -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Recent Appointment History</h5>
+        </div>
+        <div class="card-body">
+            {% if past_appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in past_appointments %}
+                        <tr>
+                            <td>{{ appointment.date|format_date }}</td>
+                            <td>{{ appointment.time|format_time }}</td>
+                            <td>{{ appointment.doctor.name }}</td>
+                            <td>
+                                {% if appointment.status == 'Completed' %}
+                                <span class="badge bg-success">{{ appointment.status }}</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ appointment.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No appointment history yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
