@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Appointment Details{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Appointment #{{ appointment.id }}</h1>
+<div class="card"><div class="card-body">
+  <div class="row">
+    <div class="col-md-6">
+      <div><strong>Doctor:</strong> {{ appointment.doctor.name }}</div>
+      <div><strong>Date/Time:</strong> {{ appointment.date }} at {{ appointment.time }}</div>
+      <div><strong>Status:</strong> {{ appointment.status }}</div>
+    </div>
+    <div class="col-md-6">
+      {% if appointment.status == 'Completed' %}
+        <div><strong>Diagnosis:</strong> {{ appointment.diagnosis }}</div>
+        <div><strong>Prescription:</strong> {{ appointment.prescription }}</div>
+        <div><strong>Notes:</strong> {{ appointment.notes }}</div>
+      {% elif form %}
+        <h2 class="h6">Reschedule</h2>
+        <form method="post" action="{{ url_for('patient.reschedule', appointment_id=appointment.id) }}">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">{{ form.slot.label(class_='form-label') }} {{ form.slot(class_='form-select', required=true) }}</div>
+          {{ form.submit(class_='btn btn-primary') }}
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div></div>
+{% endblock %}

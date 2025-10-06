@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login - HMS{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">Login</h1>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.email.label(class_='form-label') }}
+            {{ form.email(class_='form-control', placeholder='you@email.com', required=true, type='email') }}
+            {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.password.label(class_='form-label') }}
+            {{ form.password(class_='form-control', required=true, minlength='8') }}
+            {% for e in form.password.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="d-grid gap-2">
+            {{ form.submit(class_='btn btn-primary') }}
+            <a class="btn btn-outline-secondary" href="{{ url_for('auth.register') }}">Create Patient Account</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

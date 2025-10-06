@@ -1,0 +1,6 @@
+:root{--brand:#5b6ef5;--accent:#ffd066}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,sans-serif}
+.navbar-brand{color:var(--brand)}
+.btn-primary{background-color:var(--brand);border-color:var(--brand)}
+.badge-accent{background-color:var(--accent)}
+.card{border-radius:12px}

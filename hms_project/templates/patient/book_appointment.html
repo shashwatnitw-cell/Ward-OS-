@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Book Appointment{% endblock %}
+{% block content %}
+{% if view_only %}
+  <h1 class="h4 mb-3">Appointment #{{ appointment.id }}</h1>
+  <div class="card"><div class="card-body">
+    <div><strong>Doctor:</strong> {{ appointment.doctor.name }}</div>
+    <div><strong>Date:</strong> {{ appointment.date }} at {{ appointment.time }}</div>
+    <div><strong>Status:</strong> {{ appointment.status }}</div>
+    {% if appointment.status == 'Completed' %}
+      <hr>
+      <div><strong>Diagnosis:</strong> {{ appointment.diagnosis }}</div>
+      <div><strong>Prescription:</strong> {{ appointment.prescription }}</div>
+      <div><strong>Notes:</strong> {{ appointment.notes }}</div>
+    {% endif %}
+  </div></div>
+{% else %}
+  <h1 class="h4 mb-3">Book with {{ doctor.name }}</h1>
+  <form method="post" action="{{ url_for('patient.book') }}">
+    {{ form.hidden_tag() }}
+    {{ form.doctor_id() }}
+    <div class="mb-3">
+      {{ form.slot.label(class_='form-label') }}
+      {{ form.slot(class_='form-select', required=true) }}
+    </div>
+    {{ form.submit(class_='btn btn-primary') }}
+  </form>
+{% endif %}
+{% endblock %}
