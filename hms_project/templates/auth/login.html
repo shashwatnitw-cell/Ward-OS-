@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Hospital Management System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm mt-5">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login to HMS
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email Address
+                            </label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   required 
+                                   placeholder="Enter your email">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Enter your password">
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   id="remember_me" 
+                                   name="remember_me">
+                            <label class="form-check-label" for="remember_me">
+                                Remember me
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-0">New patient?</p>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-person-plus"></i>
+                            Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Demo Credentials -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Demo Credentials
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Admin:</strong><br>
+                            <small class="text-muted">
+                                admin@hms.com<br>
+                                admin123
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Doctor:</strong><br>
+                            <small class="text-muted">
+                                sarah.johnson@hms.com<br>
+                                doctor123
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Patient:</strong><br>
+                            <small class="text-muted">
+                                john.smith@email.com<br>
+                                patient123
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Hospital Management System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm mt-5">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-plus"></i>
+                        Patient Registration
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                <i class="bi bi-person"></i> Full Name *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   required 
+                                   minlength="2"
+                                   placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email Address *
+                            </label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   required 
+                                   placeholder="Enter your email address">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">
+                                <i class="bi bi-telephone"></i> Phone Number
+                            </label>
+                            <input type="tel" 
+                                   class="form-control" 
+                                   id="contact" 
+                                   name="contact" 
+                                   placeholder="Enter your phone number">
+                            <div class="form-text">Optional - for appointment reminders</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password *
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   minlength="6"
+                                   placeholder="Create a password">
+                            <div class="form-text">
+                                At least 6 characters with letters and numbers
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">
+                                <i class="bi bi-lock-fill"></i> Confirm Password *
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="confirm_password" 
+                                   name="confirm_password" 
+                                   required 
+                                   placeholder="Confirm your password">
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   id="terms" 
+                                   required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> 
+                                and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-person-plus"></i>
+                                Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account?</p>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-info">
+                        <i class="bi bi-info-circle"></i>
+                        Registration Information
+                    </h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li><i class="bi bi-check text-success"></i> Free patient registration</li>
+                        <li><i class="bi bi-check text-success"></i> Book appointments online</li>
+                        <li><i class="bi bi-check text-success"></i> Access medical history</li>
+                        <li><i class="bi bi-check text-success"></i> Secure and confidential</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

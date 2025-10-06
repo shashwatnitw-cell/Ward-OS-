@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Hospital Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-speedometer2"></i>
+            Admin Dashboard
+        </h2>
+        <div class="text-muted">
+            Welcome back, {{ current_user.name }}
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ stats.total_doctors }}</h5>
+                            <p class="card-text">Total Doctors</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-person-badge fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.doctors_list') }}" class="text-white text-decoration-none">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ stats.total_patients }}</h5>
+                            <p class="card-text">Total Patients</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.patients_list') }}" class="text-white text-decoration-none">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ stats.pending_appointments }}</h5>
+                            <p class="card-text">Pending Appointments</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-calendar-check fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.appointments_list', status='Booked') }}" class="text-white text-decoration-none">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">{{ stats.completed_appointments }}</h5>
+                            <p class="card-text">Completed Appointments</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-check-circle fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.appointments_list', status='Completed') }}" class="text-dark text-decoration-none">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Recent Appointments -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-event"></i>
+                        Recent Appointments
+                    </h5>
+                    <a href="{{ url_for('admin.appointments_list') }}" class="btn btn-sm btn-outline-primary">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_appointments %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Date & Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appointment in recent_appointments %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url_for('admin.patient_detail', patient_id=appointment.patient.id) }}" 
+                                               class="text-decoration-none">
+                                                {{ appointment.patient.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            Dr. {{ appointment.doctor.name }}
+                                            {% if appointment.doctor.doctor_profile %}
+                                                <br><small class="text-muted">{{ appointment.doctor.doctor_profile.specialization }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ format_date(appointment.date) }}<br>
+                                            <small class="text-muted">{{ format_time(appointment.time) }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="{{ get_appointment_status_class(appointment.status) }}">
+                                                {{ appointment.status }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">No recent appointments found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Specializations Overview -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up"></i>
+                        Doctors by Specialization
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if specialization_counts %}
+                        {% for specialization, count in specialization_counts.items() %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ specialization }}</span>
+                            <span class="badge bg-primary">{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No specializations found.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.doctors_list') }}" class="btn btn-sm btn-outline-primary w-100">
+                        Manage Doctors
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-success">
+                            <i class="bi bi-person-plus"></i>
+                            Add New Doctor
+                        </a>
+                        <a href="{{ url_for('admin.appointments_list') }}" class="btn btn-info">
+                            <i class="bi bi-calendar-check"></i>
+                            View All Appointments
+                        </a>
+                        <a href="{{ url_for('admin.reports') }}" class="btn btn-warning">
+                            <i class="bi bi-graph-up"></i>
+                            Generate Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
