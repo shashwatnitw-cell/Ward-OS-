@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'New' if mode=='new' else 'Edit' }} Doctor - HMS{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">{{ 'New' if mode=='new' else 'Edit' }} Doctor</h1>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">
+              {{ form.name.label(class_='form-label') }}
+              {{ form.name(class_='form-control', required=True) }}
+              {% for e in form.name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ form.email.label(class_='form-label') }}
+              {{ form.email(class_='form-control', required=True, type='email') }}
+            </div>
+            <div class="col-md-6">
+              {{ form.specialization.label(class_='form-label') }}
+              {{ form.specialization(class_='form-control', required=True) }}
+            </div>
+            <div class="col-md-6">
+              {{ form.phone.label(class_='form-label') }}
+              {{ form.phone(class_='form-control') }}
+            </div>
+            <div class="col-12">
+              {{ form.bio.label(class_='form-label') }}
+              {{ form.bio(class_='form-control', rows=3) }}
+            </div>
+            {% if mode == 'new' %}
+            <div class="col-12">
+              {{ form.availability_times.label(class_='form-label') }}
+              {{ form.availability_times(class_='form-control', placeholder='09:00, 10:00, 14:30') }}
+              <div class="form-text">Applied to each of the next 7 days.</div>
+            </div>
+            {% endif %}
+          </div>
+          <div class="mt-3">
+            {{ form.submit(class_='btn btn-primary') }}
+            <a class="btn btn-outline-secondary" href="{{ url_for('admin.doctors_list') }}">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Appointment Detail - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Appointment with {{ appt.patient.name }}</h1>
+<ul class="list-unstyled">
+  <li><strong>Date:</strong> {{ appt.date }} at {{ appt.time }}</li>
+  <li><strong>Status:</strong> {{ appt.status }}</li>
+</ul>
+{% if appt.status != 'Completed' %}
+<div class="card mt-3">
+  <div class="card-body">
+    <h2 class="h5">Complete Visit</h2>
+    <form method="post" action="{{ url_for('doctor.appointment_complete', appointment_id=appt.id) }}" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.diagnosis.label(class_='form-label') }}
+        {{ form.diagnosis(class_='form-control', rows=3, required=True) }}
+        {% for e in form.diagnosis.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.prescription.label(class_='form-label') }}
+        {{ form.prescription(class_='form-control', rows=3, required=True) }}
+        {% for e in form.prescription.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.notes.label(class_='form-label') }}
+        {{ form.notes(class_='form-control', rows=2) }}
+      </div>
+      {{ form.submit(class_='btn btn-success') }}
+    </form>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-success">Visit completed on {{ appt.recorded_at }}.</div>
+<dl class="row">
+  <dt class="col-sm-3">Diagnosis</dt><dd class="col-sm-9">{{ appt.diagnosis }}</dd>
+  <dt class="col-sm-3">Prescription</dt><dd class="col-sm-9">{{ appt.prescription }}</dd>
+  <dt class="col-sm-3">Notes</dt><dd class="col-sm-9">{{ appt.notes or '-' }}</dd>
+</dl>
+{% endif %}
+{% endblock %}

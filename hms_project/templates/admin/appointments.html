@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}All Appointments - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Appointments</h1>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-3">
+    <select name="status" class="form-select">
+      <option value="">All Status</option>
+      {% for s in ['Booked','Completed','Cancelled'] %}
+      <option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
+</form>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.date }}</td>
+        <td>{{ a.time }}</td>
+        <td>{{ a.patient.name }}</td>
+        <td>{{ a.doctor.name }}</td>
+        <td>{{ a.status }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted">No appointments</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

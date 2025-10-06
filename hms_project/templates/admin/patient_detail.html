@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Patient Detail - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">{{ patient.name }}</h1>
+<div class="mb-3 text-muted">{{ patient.email }} · {{ patient.contact or 'N/A' }}</div>
+<h2 class="h6">History</h2>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Status</th><th>Diagnosis</th></tr></thead>
+    <tbody>
+      {% for a in history %}
+      <tr>
+        <td>{{ a.date }}</td>
+        <td>{{ a.time }}</td>
+        <td>{{ a.doctor.name }}</td>
+        <td>{{ a.status }}</td>
+        <td>{{ a.diagnosis or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted">No history</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

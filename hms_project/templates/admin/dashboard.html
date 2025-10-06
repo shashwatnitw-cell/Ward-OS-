@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - HMS{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card card-stat">
+      <div class="card-body">
+        <div class="h6 text-muted">Doctors</div>
+        <div class="display-6">{{ total_doctors }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat">
+      <div class="card-body">
+        <div class="h6 text-muted">Patients</div>
+        <div class="display-6">{{ total_patients }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat">
+      <div class="card-body">
+        <div class="h6 text-muted">Appointments</div>
+        <div class="display-6">{{ total_appointments }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat">
+      <div class="card-body">
+        <div class="h6 text-muted">Active</div>
+        <div class="display-6">{{ upcoming }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-primary" href="{{ url_for('admin.doctors_list') }}">Manage Doctors</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('admin.patients_list') }}">Manage Patients</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('admin.appointments_view') }}">Appointments</a>
+</div>
+{% endblock %}

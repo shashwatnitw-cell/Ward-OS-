@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Appointment - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Appointment Details</h1>
+<ul class="list-unstyled">
+  <li><strong>Date:</strong> {{ appt.date }} {{ appt.time }}</li>
+  <li><strong>Doctor:</strong> {{ appt.doctor.name }}</li>
+  <li><strong>Status:</strong> {{ appt.status }}</li>
+</ul>
+{% if appt.status == 'Completed' %}
+<div class="card">
+  <div class="card-body">
+    <h2 class="h6">Treatment</h2>
+    <dl class="row">
+      <dt class="col-sm-3">Diagnosis</dt><dd class="col-sm-9">{{ appt.diagnosis }}</dd>
+      <dt class="col-sm-3">Prescription</dt><dd class="col-sm-9">{{ appt.prescription }}</dd>
+      <dt class="col-sm-3">Notes</dt><dd class="col-sm-9">{{ appt.notes or '-' }}</dd>
+    </dl>
+  </div>
+</div>
+{% endif %}
+<a class="btn btn-outline-secondary mt-3" href="{{ url_for('patient.dashboard') }}">Back</a>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard - HMS{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Today's Appointments</h1>
+<div class="list-group mb-4">
+  {% for a in todays %}
+  <a href="{{ url_for('doctor.appointment_detail', appointment_id=a.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+    <span>{{ a.time }} · {{ a.patient.name }}</span>
+    <span class="badge bg-secondary">{{ a.status }}</span>
+  </a>
+  {% else %}
+  <div class="text-muted">No appointments today</div>
+  {% endfor %}
+</div>
+<h2 class="h6">All Upcoming</h2>
+<div class="list-group">
+  {% for a in upcoming %}
+  <a href="{{ url_for('doctor.appointment_detail', appointment_id=a.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+    <span>{{ a.date }} {{ a.time }} · {{ a.patient.name }}</span>
+    <span class="badge bg-secondary">{{ a.status }}</span>
+  </a>
+  {% else %}
+  <div class="text-muted">No upcoming appointments</div>
+  {% endfor %}
+</div>
+<div class="mt-4">
+  <a class="btn btn-outline-primary" href="{{ url_for('doctor.availability') }}">Manage Availability</a>
+</div>
+{% endblock %}
