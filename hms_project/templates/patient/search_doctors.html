@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Find Doctors - Hospital Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-search"></i>
+            Find Doctors
+        </h2>
+    </div>
+    
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Search by Name</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="search" 
+                           name="search" 
+                           value="{{ search }}" 
+                           placeholder="Enter doctor name">
+                </div>
+                <div class="col-md-4">
+                    <label for="specialization" class="form-label">Specialization</label>
+                    <select class="form-select" id="specialization" name="specialization">
+                        <option value="">All Specializations</option>
+                        {% for spec in specializations %}
+                        <option value="{{ spec }}" {% if spec == specialization %}selected{% endif %}>
+                            {{ spec }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                    <a href="{{ url_for('patient.search_doctors') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Doctors Grid -->
+    {% if doctors.items %}
+    <div class="row">
+        {% for doctor in doctors.items %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card doctor-profile-card h-100">
+                <div class="card-body text-center">
+                    <!-- Doctor Avatar -->
+                    <div class="doctor-avatar">
+                        {{ doctor.name[0].upper() }}
+                    </div>
+                    
+                    <!-- Doctor Info -->
+                    <h5 class="card-title">Dr. {{ doctor.name }}</h5>
+                    {% if doctor.doctor_profile %}
+                    <p class="text-muted">{{ doctor.doctor_profile.specialization }}</p>
+                    
+                    {% if doctor.doctor_profile.experience_years %}
+                    <p class="small text-muted">
+                        <i class="bi bi-award"></i>
+                        {{ doctor.doctor_profile.experience_years }} years experience
+                    </p>
+                    {% endif %}
+                    
+                    {% if doctor.doctor_profile.bio %}
+                    <p class="small text-muted">{{ doctor.doctor_profile.bio[:100] }}{% if doctor.doctor_profile.bio|length > 100 %}...{% endif %}</p>
+                    {% endif %}
+                    {% endif %}
+                    
+                    <!-- Availability Info -->
+                    <div class="mb-3">
+                        {% set available_count = doctor_availability.get(doctor.id, 0) %}
+                        {% if available_count > 0 %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-calendar-check"></i>
+                            {{ available_count }} slots available
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning">
+                            <i class="bi bi-calendar-x"></i>
+                            No slots available
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('patient.doctor_profile', doctor_id=doctor.id) }}" 
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                            View Profile
+                        </a>
+                        {% if doctor_availability.get(doctor.id, 0) > 0 %}
+                        <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" 
+                           class="btn btn-success">
+                            <i class="bi bi-calendar-plus"></i>
+                            Book Appointment
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if doctors.pages > 1 %}
+    <nav aria-label="Doctors pagination">
+        <ul class="pagination justify-content-center">
+            {% if doctors.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('patient.search_doctors', page=doctors.prev_num, search=search, specialization=specialization) }}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in doctors.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != doctors.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('patient.search_doctors', page=page_num, search=search, specialization=specialization) }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if doctors.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('patient.search_doctors', page=doctors.next_num, search=search, specialization=specialization) }}">
+                    Next
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-person-x fs-1 text-muted"></i>
+        <h4 class="text-muted mt-3">No Doctors Found</h4>
+        <p class="text-muted">Try adjusting your search criteria or browse all specializations.</p>
+        <a href="{{ url_for('patient.search_doctors') }}" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise"></i>
+            Reset Search
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
