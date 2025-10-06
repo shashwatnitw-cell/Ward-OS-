@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Reschedule Appointment - Patient - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h3 class="mb-0">Reschedule Appointment</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Current Appointment Info -->
+                    <div class="alert alert-info">
+                        <h5>Current Appointment</h5>
+                        <p class="mb-0">
+                            <strong>Doctor:</strong> {{ appointment.doctor.name }}<br>
+                            <strong>Current Date:</strong> {{ appointment.date|format_date }}<br>
+                            <strong>Current Time:</strong> {{ appointment.time|format_time }}
+                        </p>
+                    </div>
+                    
+                    <!-- Reschedule Form -->
+                    {% if availability_by_date %}
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="date" class="form-label">New Date *</label>
+                            <select class="form-select" id="date" name="date" required>
+                                <option value="">Choose a date...</option>
+                                {% for date_key in availability_by_date.keys()|sort %}
+                                <option value="{{ date_key }}">{{ date_key }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="time" class="form-label">New Time *</label>
+                            <select class="form-select" id="time" name="time" required>
+                                <option value="">Choose a time...</option>
+                                {% for date_key, times in availability_by_date.items()|sort %}
+                                    {% for time in times|sort %}
+                                    <option value="{{ time }}">{{ date_key }} - {{ time|format_time }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="alert alert-secondary">
+                            <strong>Available Slots:</strong>
+                            {% for date_key, times in availability_by_date.items()|sort %}
+                            <div class="mb-2">
+                                <strong>{{ date_key }}:</strong> 
+                                {% for time in times|sort %}
+                                {{ time|format_time }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-warning">Reschedule Appointment</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <p class="mb-0">No available slots for rescheduling. Please try again later or contact the doctor's office.</p>
+                    </div>
+                    <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-secondary">Back</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

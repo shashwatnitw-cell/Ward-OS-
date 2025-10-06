@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Doctors</h5>
+                    <p class="display-4">{{ total_doctors }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Patients</h5>
+                    <p class="display-4">{{ total_patients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Total Appointments</h5>
+                    <p class="display-4">{{ total_appointments }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Upcoming (7 days)</h5>
+                    <p class="display-4">{{ upcoming_appointments }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-primary me-2">Add New Doctor</a>
+                    <a href="{{ url_for('admin.doctors_list') }}" class="btn btn-outline-primary me-2">View All Doctors</a>
+                    <a href="{{ url_for('admin.patients_list') }}" class="btn btn-outline-success me-2">View All Patients</a>
+                    <a href="{{ url_for('admin.appointments_list') }}" class="btn btn-outline-info">View All Appointments</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Appointments -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in recent_appointments %}
+                                <tr>
+                                    <td>{{ appointment.id }}</td>
+                                    <td>{{ appointment.patient.name }}</td>
+                                    <td>{{ appointment.doctor.name }}</td>
+                                    <td>{{ appointment.date|format_date }}</td>
+                                    <td>{{ appointment.time|format_time }}</td>
+                                    <td>
+                                        {% if appointment.status == 'Booked' %}
+                                        <span class="badge bg-primary">{{ appointment.status }}</span>
+                                        {% elif appointment.status == 'Completed' %}
+                                        <span class="badge bg-success">{{ appointment.status }}</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">{{ appointment.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No appointments yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

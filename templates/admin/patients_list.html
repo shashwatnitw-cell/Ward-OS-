@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Patients - Admin - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Manage Patients</h1>
+    
+    <!-- Search Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('admin.patients_list') }}">
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" name="search" placeholder="Search by name or email..." value="{{ search }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Patients List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">All Patients ({{ patients|length }})</h5>
+        </div>
+        <div class="card-body">
+            {% if patients %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{ patient.name }}</td>
+                            <td>{{ patient.email }}</td>
+                            <td>{{ patient.contact }}</td>
+                            <td>{{ patient.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.patient_detail', patient_id=patient.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No patients found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

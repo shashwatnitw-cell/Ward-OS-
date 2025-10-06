@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Welcome, {{ current_user.name }}</h1>
+    
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Appointments</h5>
+                    <p class="display-4">{{ total_appointments }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Completed</h5>
+                    <p class="display-4">{{ completed_appointments }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Pending</h5>
+                    <p class="display-4">{{ pending_appointments }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Today's Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Today's Appointments</h5>
+        </div>
+        <div class="card-body">
+            {% if todays_appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in todays_appointments %}
+                        <tr>
+                            <td>{{ appointment.time|format_time }}</td>
+                            <td>{{ appointment.patient.name }}</td>
+                            <td>
+                                {% if appointment.status == 'Booked' %}
+                                <span class="badge bg-primary">{{ appointment.status }}</span>
+                                {% else %}
+                                <span class="badge bg-success">{{ appointment.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                {% if appointment.status == 'Booked' %}
+                                <a href="{{ url_for('doctor.complete_appointment', appointment_id=appointment.id) }}" class="btn btn-sm btn-success">Mark Complete</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No appointments scheduled for today.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Upcoming Appointments -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Upcoming Appointments (Next 7 Days)</h5>
+        </div>
+        <div class="card-body">
+            {% if upcoming_appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in upcoming_appointments %}
+                        <tr>
+                            <td>{{ appointment.date|format_date }}</td>
+                            <td>{{ appointment.time|format_time }}</td>
+                            <td>{{ appointment.patient.name }}</td>
+                            <td>
+                                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No upcoming appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

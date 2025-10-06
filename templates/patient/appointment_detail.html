@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Appointment Details - Patient - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Appointment Details</h1>
+        <a href="{{ url_for('patient.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Appointment Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Appointment ID:</strong> {{ appointment.id }}</p>
+                    <p><strong>Date:</strong> {{ appointment.date|format_date }}</p>
+                    <p><strong>Time:</strong> {{ appointment.time|format_time }}</p>
+                    <p><strong>Status:</strong> 
+                        {% if appointment.status == 'Booked' %}
+                        <span class="badge bg-primary">{{ appointment.status }}</span>
+                        {% elif appointment.status == 'Completed' %}
+                        <span class="badge bg-success">{{ appointment.status }}</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{{ appointment.status }}</span>
+                        {% endif %}
+                    </p>
+                    <p class="mb-0"><strong>Booked on:</strong> {{ appointment.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                </div>
+                {% if appointment.status == 'Booked' %}
+                <div class="card-footer">
+                    <a href="{{ url_for('patient.reschedule_appointment', appointment_id=appointment.id) }}" class="btn btn-warning btn-sm">Reschedule</a>
+                    <form method="POST" action="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel Appointment</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Doctor Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ appointment.doctor.name }}</p>
+                    {% if appointment.doctor.doctor_profile %}
+                    <p><strong>Specialization:</strong> {{ appointment.doctor.doctor_profile.specialization }}</p>
+                    {% endif %}
+                    <p><strong>Contact:</strong> {{ appointment.doctor.contact }}</p>
+                    <p class="mb-0"><strong>Email:</strong> {{ appointment.doctor.email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Treatment Details (if completed) -->
+    {% if appointment.status == 'Completed' %}
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Treatment Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <strong>Diagnosis:</strong>
+                <p>{{ appointment.diagnosis }}</p>
+            </div>
+            <div class="mb-3">
+                <strong>Prescription:</strong>
+                <p>{{ appointment.prescription }}</p>
+            </div>
+            {% if appointment.notes %}
+            <div class="mb-0">
+                <strong>Additional Notes:</strong>
+                <p class="mb-0">{{ appointment.notes }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% elif appointment.status == 'Booked' %}
+    <div class="alert alert-info">
+        Treatment details will be available after your appointment is completed by the doctor.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Doctors - Admin - HMS{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage Doctors</h1>
+        <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-primary">Add New Doctor</a>
+    </div>
+    
+    <!-- Search Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('admin.doctors_list') }}">
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" name="search" placeholder="Search by name or specialization..." value="{{ search }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Doctors List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">All Doctors ({{ doctors|length }})</h5>
+        </div>
+        <div class="card-body">
+            {% if doctors %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Specialization</th>
+                            <th>Contact</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td>{{ doctor.name }}</td>
+                            <td>{{ doctor.email }}</td>
+                            <td>
+                                {% if doctor.doctor_profile %}
+                                <span class="badge bg-info">{{ doctor.doctor_profile.specialization }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ doctor.contact }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_doctor', doctor_id=doctor.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form method="POST" action="{{ url_for('admin.delete_doctor', doctor_id=doctor.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No doctors found. <a href="{{ url_for('admin.add_doctor') }}">Add a new doctor</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
